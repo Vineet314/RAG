@@ -7,3 +7,7 @@ RAGenv/
 .ipynb_checkpoints
 #ignore the pdf files so that they are not uploaded to the repo
 *.pdf
+#Chroma Db files
+chromadb/
+#ignore .npy files
+*.npy
