@@ -5,3 +5,5 @@ __pycache__/
 RAGenv/
 # Ignore Jupyter Notebook checkpoints
 .ipynb_checkpoints
+#ignore the pdf files so that they are not uploaded to the repo
+*.pdf

@@ -1,2 +1,5 @@
 openai
 google-genai
+pymupdf
+numpy
+chromadb
