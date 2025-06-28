@@ -8,6 +8,6 @@ RAGenv/
 #ignore the pdf files so that they are not uploaded to the repo
 *.pdf
 #Chroma Db files
-chromadb/
+*chromadb/
 #ignore .npy files
 *.npy
