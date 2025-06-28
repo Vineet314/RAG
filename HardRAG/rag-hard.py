@@ -7,7 +7,7 @@ from openai.types.responses.response_created_event import ResponseCreatedEvent
 
 # ------------------defaults------------------
 oclient = OpenAI(api_key=os.getenv("API_KEY"))
-db_dir = r"../chromadb"
+db_dir = r"chromadb/"
 name = "my_collection"
 # this script assumes a ChromaDB collection has already been created 
 # If not, you can run the script knowledge-base.py to make one

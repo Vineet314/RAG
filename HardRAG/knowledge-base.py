@@ -10,14 +10,14 @@ oclient = OpenAI(api_key=os.getenv("API_KEY"))
 # gclient = genai.client(api_key=os.getenv("GEMINI_API_KEY"))
 
 # Key-word arguments, can be over-ridden via CLI
-text_file = r"../../data/knowledge.txt"
+text_file = r"../data/knowledge.txt"
 chunk_size=3500
 chunk_overlap=300
 save_embds = False
 load_embds = False
 load_path = None
 save_path = None
-db_dir = r"../chromadb"
+db_dir = r"chromadb/"
 name = "my_collection"
 
 #------------------utils------------------
