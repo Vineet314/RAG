@@ -1,9 +1,9 @@
 import os
 import argparse
 from chromadb import PersistentClient
-from chromadb.api.models.Collection import Collection as chromadb_collection
+from chromadb.api.models.Collection import Collection
 from openai import OpenAI
-# from openai.types.responses.response_text_delta_event import ResponseTextDeltaEvent
+from openai.types.responses.response_created_event import ResponseCreatedEvent
 
 # ------------------defaults------------------
 oclient = OpenAI(api_key=os.getenv("API_KEY"))
@@ -12,8 +12,11 @@ name = "my_collection"
 # this script assumes a ChromaDB collection has already been created 
 # If not, you can run the script knowledge-base.py to make one
 
+prev_id = None # initialize it to none
 # ------------------utils------------------
-def chat(query:str, collection:chromadb_collection, num_results:int=3) -> None:
+def chat(query:str, collection:Collection, num_results:int=3) -> None:
+    global prev_id
+    
     # Embedify
     query_vector = oclient.embeddings.create(input=query, model='text-embedding-3-small').data[0].embedding
 
@@ -35,23 +38,21 @@ def chat(query:str, collection:chromadb_collection, num_results:int=3) -> None:
         Answer:
         """
     print("RAG_AI: ", end="", flush=True)
-    response_stream = oclient.responses.create(model='gpt-4.1-mini', input=prompt, stream=True)
+    response_stream = oclient.responses.create(model='gpt-4.1-mini', input=prompt, stream=True, previous_response_id=prev_id)
     for event in response_stream:
         if hasattr(event, "delta"):
             print(event.delta, end='', flush=True)
-        # if isinstance(event, ResponseTextDeltaEvent):
-        #     print(event.delta, end='', flush=True)
+        if isinstance(event, ResponseCreatedEvent):
+            prev_id = event.response.id
 
 def main(args):
     cclient = PersistentClient(path=args.db_dir)
-    if args.name not in cclient.list_collections():
-        raise FileNotFoundError(f"Collection '{name}' not found. Please create it first.")
     collection = cclient.get_collection(name=args.name)
     while True:
         # take a query from the user
         query = input("\n\nHuman: ")
         if query.lower().strip() in ('bye','exit','quit'):
-            print("AI: Thank you for chatting with me")
+            print("RAG_AI: Thank you for chatting with me")
             break
         chat(query, collection)
 
