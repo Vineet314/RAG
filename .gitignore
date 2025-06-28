@@ -9,5 +9,7 @@ RAGenv/
 *.pdf
 #Chroma Db files
 *chromadb/
+*chroma/
+*sqlite3
 #ignore .npy files
 *.npy
