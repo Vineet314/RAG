@@ -1,8 +1,10 @@
 import fitz, os
 import argparse
+# ------------------defaults------------------
 data_dir = r"../../data/Papers"
 knowledge_file = r"../../data/knowledge_try.txt"
 
+#------------------utils------------------
 def extract_text(data_dir: str, out_path: str) -> None:
     """
     Extracts and writes text from multiple PDF files in a specified directory to a text file. Works best for PDFs with minimal images.
@@ -27,10 +29,12 @@ def extract_text(data_dir: str, out_path: str) -> None:
     with open(out_path, 'w', encoding='utf-8') as f:
         f.write(all_text)
 
-if __name__ == '__main__':
-    ap = argparse.ArgumentParser(description="Extract text from PDF files in a directory and save to a text file.")
-    ap.add_argument('--data_dir', type=str, default=data_dir, help='Directory containing PDF files')
-    ap.add_argument('--out_path', type=str, default=knowledge_file, help='Path to save the extracted text file')
-    args = ap.parse_args()
+def parse_args():
+    parser = argparse.ArgumentParser(description="Extract text from PDF files in a directory and save to a text file.")
+    parser.add_argument('--data_dir', type=str, default=data_dir, help='Directory containing PDF files')
+    parser.add_argument('--out_path', type=str, default=knowledge_file, help='Path to save the extracted text file')
+    return parser.parse_args()
 
+if __name__ == '__main__':
+    args = parse_args()
     extract_text(args.data_dir, args.out_path)
