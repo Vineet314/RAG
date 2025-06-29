@@ -2,13 +2,15 @@ import gradio as gr
 import os, io
 
 from google import genai
+from google.genai import types
 from pathlib import Path
 
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 # This will store uploaded PDF references for each session
 session_pdfs = {}
-
+prev_message = None
+prev_response = None
 def upload_pdfs(files):
     """Handles PDF uploads and stores the Gemini file references in memory."""
     global session_pdfs
@@ -21,11 +23,18 @@ def upload_pdfs(files):
 
 def chat_with_pdfs(message, history, session_id):
     """Handles chat using the uploaded PDFs."""
+    global prev_message, prev_response
+
     pdfs = session_pdfs.get(session_id, [])
     response = client.models.generate_content(
         model="gemini-2.5-flash",
+        config=types.GenerateContentConfig(
+                system_instruction=f'''The user has uploaded {len(pdfs)} documents and will be asking questions about them.
+                Here is user's last message {prev_message}
+                Here was your response to that : {prev_response}'''),
         contents=[*pdfs, message])
-    
+    prev_message = message
+    prev_response = response.text
     return response.text
 
 # Gradio Blocks app
