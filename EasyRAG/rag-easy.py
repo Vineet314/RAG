@@ -1,6 +1,7 @@
+print("Importing Dependencies, please wait")
 import gradio as gr
 import os, io
-
+print("\nAlmost There")
 from google import genai
 from google.genai import types
 from pathlib import Path
